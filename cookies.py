@@ -56,26 +56,19 @@ time.sleep(4)
 driver.find_element(*cart).click()
 time.sleep(2)
 
-# Retrieving cookies from a driver, filters them based on predefined names, and saves the filtered cookies to a pickle file for later use.
-cookies_names = ["PHPSESSID", "_csrf", "_ym_d", "_ym_isad", "_ym_uid", "_ym_visorc"]
-all_cookies = driver.get_cookies()
-filtered_cookies = [cookie for cookie in all_cookies if cookie['name'] in cookies_names]
-with open(os.path.join(os.getcwd() + "cookies_list.pkl"), "wb") as file:
-    pickle.dump(filtered_cookies, file)
+# Saving all cookies into file
+pickle.dump(driver.get_cookies(), open(os.getcwd() + "/cookies.pkl", "wb"))
 
-# Deleting all cookies
+# Deleting all of the cookies
 driver.delete_all_cookies()
 driver.refresh()
-time.sleep(5)
+time.sleep(3)
 
-# Loads cookies from the file
-with open(os.path.join(os.getcwd(), "cookies_list.pkl"), "rb") as file:
-    cookies_list = pickle.load(file)
+# Adding cookies from file to variable
+cookies = pickle.load(open(os.getcwd() + "/cookies.pkl", "rb"))
 
-# Adding each cookie from cookies_list
-for cookie in cookies_list:
+# Adding cookies to browser session
+for cookie in cookies:
     driver.add_cookie(cookie)
-
-# Refreshing the page to apply cookies
 driver.refresh()
-time.sleep(6)
+time.sleep(3)
